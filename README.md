@@ -19,7 +19,7 @@ Vault Budget Tracker is a modern web application that helps users manage their p
 ![image_alt](https://github.com/joshuaarao42-arch/BUDGET-TRACKER/blob/4a8cc438ee939c6f839a354cad28734d0bdfa35d/Screenshot%202026-07-28%20160350.png)
 ![image_alt](https://github.com/joshuaarao42-arch/BUDGET-TRACKER/blob/0a6a1e0c3c5b2dd19033ed33f9e34f4290a9f34f/Screenshot%202026-07-28%20160412.png)
 ![image_alt](https://github.com/joshuaarao42-arch/BUDGET-TRACKER/blob/f22f3de2b08fbe10165f60cb19c83bf1f26b3e86/Screenshot%202026-07-28%20160431.png)
-
+![image_alt](https://github.com/joshuaarao42-arch/BUDGET-TRACKER/blob/1e09f414d5112356bc6f105a1779c5249f81fa0c/Screenshot%202026-07-28%20160452.png)
 
 ## Technologies Used
 
