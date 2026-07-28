@@ -219,17 +219,64 @@ function navigateTo(pageId) {
     if (pageId === 'analytics') updateAnalyticsCharts();
 }
 
+function getMonthKey(offsetFromCurrent = 0) {
+    const d = new Date();
+    d.setMonth(d.getMonth() + offsetFromCurrent);
+    return d.toISOString().substring(0, 7); // "YYYY-MM"
+}
+
+function sumByTypeAndMonth(type, monthKey) {
+    return transactions
+        .filter(t => t.type === type && t.date && t.date.substring(0, 7) === monthKey)
+        .reduce((sum, t) => sum + t.amount, 0);
+}
+
+function percentChange(current, previous) {
+    if (previous === 0) return current === 0 ? 0 : null; // null = "no baseline to compare"
+    return ((current - previous) / previous) * 100;
+}
+
+function updateStatChange(elId, percent) {
+    const container = document.getElementById(elId);
+    if (!container) return;
+
+    if (percent === null) {
+        container.className = 'stat-change neutral';
+        container.innerHTML = `<span>No data last month</span>`;
+        return;
+    }
+
+    const rounded = Math.abs(percent).toFixed(1);
+    const isPositive = percent >= 0;
+    container.className = `stat-change ${isPositive ? 'positive' : 'negative'}`;
+    container.innerHTML = `
+        <i class="fas fa-arrow-${isPositive ? 'up' : 'down'}"></i>
+        <span>${isPositive ? '+' : '-'}${rounded}% this month</span>
+    `;
+}
+
 function updateDashboard() {
     const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const expenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     const savings = goals.reduce((sum, g) => sum + g.current, 0);
-    
+
     animateValue('total-income', income);
     animateValue('total-expenses', expenses);
     animateValue('net-balance', income - expenses);
     animateValue('total-savings', savings);
     animateValue('savings-total', savings);
-    
+
+    const thisMonth = getMonthKey(0);
+    const lastMonth = getMonthKey(-1);
+
+    const incomeThisMonth = sumByTypeAndMonth('income', thisMonth);
+    const incomeLastMonth = sumByTypeAndMonth('income', lastMonth);
+    const expensesThisMonth = sumByTypeAndMonth('expense', thisMonth);
+    const expensesLastMonth = sumByTypeAndMonth('expense', lastMonth);
+
+    updateStatChange('income-change', percentChange(incomeThisMonth, incomeLastMonth));
+    updateStatChange('expenses-change', percentChange(expensesThisMonth, expensesLastMonth));
+
     renderRecentTransactions();
     renderGoals();
     updateExpenseChart();
