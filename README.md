@@ -15,6 +15,8 @@ Vault Budget Tracker is a modern web application that helps users manage their p
 - 📱 Responsive interface
 - ⚡ Fast and lightweight
 
+![image_alt](https://github.com/joshuaarao42-arch/BUDGET-TRACKER/blob/b9ae8bfe20c61e9e11a1a7aac8a4eeaee94eaa3c/Screenshot%202026-07-28%20160328.png)
+
 ## Technologies Used
 
 ### Frontend
