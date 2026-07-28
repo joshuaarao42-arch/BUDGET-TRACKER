@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const { readData, writeData } = require('./db');
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 
 function nextId(items) {
   return items.length ? Math.max(...items.map(i => i.id)) + 1 : 1;
@@ -172,6 +174,10 @@ app.delete('/api/goals/:id', requireAuth, (req, res) => {
 });
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Vault API running at http://localhost:${PORT}`);
