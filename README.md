@@ -57,7 +57,7 @@ npm start
 Open your browser and visit:
 
 ```
-http://localhost:56917/
+https://budget-tracker-gjoj.onrender.com/
 ```
 
 ## Project Structure
@@ -70,7 +70,6 @@ http://localhost:56917/
 ├── auth.js
 ├── db.js
 ├── package.json
-└── README.md
 ```
 
 ## Future Improvements
