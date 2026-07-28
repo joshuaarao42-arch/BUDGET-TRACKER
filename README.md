@@ -1,6 +1,7 @@
 # BUDGET-TRACKER
 Student version of a web-based budget tracker for managing personal income and expenses.
 # 💰 Vault Budget Tracker
+https://github.com/joshuaarao42-arch/BUDGET-TRACKER/blob/55273f16f103be92258fee572e8843857e5bb921/Screenshot%202026-07-28%20160156.png
 
 Vault Budget Tracker is a modern web application that helps users manage their personal finances by tracking income, expenses, and account balances through a clean and intuitive interface.
 
