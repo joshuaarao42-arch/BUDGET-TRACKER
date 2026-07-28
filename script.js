@@ -1,4 +1,4 @@
-const API_BASE = 'https://your-backend.onrender.com/api';
+const API_BASE = '/api';
 
 let transactions = [];
 let goals = [];
