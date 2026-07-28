@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "Joshy",
+      "passwordHash": "$2b$10$Okw52RaGHveA3zB8d9FFE.JZcplxlSKXM2fROkDj1jM5HsCbmBmP."
+    }
+  ],
+  "transactions": [],
+  "goals": []
+}

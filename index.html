@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault - Student Budget Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="auth-screen" id="auth-screen">
+        <div class="auth-card glass-card">
+            <div class="logo auth-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-vault"></i>
+                </div>
+                <span>Vault</span>
+            </div>
+            <p class="auth-subtitle">Student budget tracker</p>
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" data-tab="login" onclick="setAuthTab('login')">Log In</button>
+                <button type="button" class="auth-tab" data-tab="register" onclick="setAuthTab('register')">Sign Up</button>
+            </div>
+
+            <div class="auth-error" id="auth-error"></div>
+
+            <form id="login-form" class="modal-form auth-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" required id="login-username" placeholder="Your username" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" required id="login-password" placeholder="Your password" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-primary btn-full">Log In</button>
+            </form>
+
+            <form id="register-form" class="modal-form auth-form hidden">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" required id="register-username" placeholder="Pick a username (min. 3 characters)" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" required id="register-password" placeholder="Pick a password (min. 6 characters)" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn-primary btn-full">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-shell hidden" id="app-shell">
+    <nav class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-vault"></i>
+            </div>
+            <span>Vault</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active" data-page="dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </li>
+            <li data-page="transactions">
+                <i class="fas fa-list"></i>
+                <span>Transactions</span>
+            </li>
+            <li data-page="savings">
+                <i class="fas fa-piggy-bank"></i>
+                <span>Savings Goals</span>
+            </li>
+            <li data-page="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </li>
+        </ul>
+        <div class="user-profile">
+            <div class="avatar" id="user-avatar">--</div>
+            <div class="user-info">
+                <span class="name" id="user-name">--</span>
+                <span class="role">Student</span>
+            </div>
+            <button class="btn-icon logout-btn" id="logout-btn" title="Log out">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <h1 id="page-title">Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn-icon" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn-primary" onclick="openModal('transaction-modal')">
+                    <i class="fas fa-plus"></i>
+                    Add Transaction
+                </button>
+            </div>
+        </header>
+
+        <section id="dashboard" class="page active">
+            <div class="cards-grid">
+                <div class="stat-card" style="--delay: 0s">
+                    <div class="card-glow"></div>
+                    <div class="stat-header">
+                        <div class="stat-icon income">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <span class="stat-label">Total Income</span>
+                    </div>
+                    <div class="stat-value" id="total-income">₱0.00</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12.5% this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="--delay: 0.1s">
+                    <div class="card-glow"></div>
+                    <div class="stat-header">
+                        <div class="stat-icon expense">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <span class="stat-label">Total Expenses</span>
+                    </div>
+                    <div class="stat-value" id="total-expenses">₱0.00</div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>-5.2% this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="--delay: 0.2s">
+                    <div class="card-glow"></div>
+                    <div class="stat-header">
+                        <div class="stat-icon balance">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <span class="stat-label">Net Balance</span>
+                    </div>
+                    <div class="stat-value" id="net-balance">₱0.00</div>
+                    <div class="stat-change neutral">
+                        <span>Updated just now</span>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="--delay: 0.3s">
+                    <div class="card-glow"></div>
+                    <div class="stat-header">
+                        <div class="stat-icon savings">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <span class="stat-label">Total Savings</span>
+                    </div>
+                    <div class="stat-value" id="total-savings">₱0.00</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8.3% this month</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="glass-card chart-card">
+                    <div class="card-header">
+                        <h3>Expense Breakdown</h3>
+                        <select class="filter-select">
+                            <option>This Month</option>
+                            <option>Last Month</option>
+                            <option>This Year</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="expenseChart"></canvas>
+                        <div class="chart-legend" id="chartLegend"></div>
+                    </div>
+                </div>
+
+                <div class="glass-card recent-card">
+                    <div class="card-header">
+                        <h3>Recent Transactions</h3>
+                        <button class="btn-text" onclick="navigateTo('transactions')">View All</button>
+                    </div>
+                    <div class="transactions-list" id="recent-transactions"></div>
+                </div>
+            </div>
+
+            <div class="glass-card goals-card">
+                <div class="card-header">
+                    <h3>Savings Goals</h3>
+                    <button class="btn-text" onclick="openModal('goal-modal')">+ New Goal</button>
+                </div>
+                <div class="goals-grid" id="goals-grid"></div>
+            </div>
+        </section>
+
+        <section id="transactions" class="page">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h3>All Transactions</h3>
+                    <div class="filter-group">
+                        <input type="text" class="search-input" placeholder="Search transactions..." id="search-transactions">
+                        <select class="filter-select" id="filter-category">
+                            <option value="">All Categories</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transport</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="bills">Bills & Utilities</option>
+                            <option value="health">Health</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="transactions-table-container">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="savings" class="page">
+            <div class="savings-header">
+                <div class="glass-card summary-card">
+                    <h3>Total Saved</h3>
+                    <div class="big-number" id="savings-total">₱0.00</div>
+                    <p>Across all goals</p>
+                </div>
+                <button class="btn-primary btn-large" onclick="openModal('goal-modal')">
+                    <i class="fas fa-plus"></i>
+                    Create New Goal
+                </button>
+            </div>
+            <div class="goals-full-grid" id="savings-goals-grid"></div>
+        </section>
+
+        <section id="analytics" class="page">
+            <div class="analytics-grid">
+                <div class="glass-card chart-large">
+                    <div class="card-header">
+                        <h3>Monthly Overview</h3>
+                    </div>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+                <div class="glass-card chart-medium">
+                    <div class="card-header">
+                        <h3>Category Distribution</h3>
+                    </div>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="transaction-modal">
+        <div class="modal-backdrop" onclick="closeModal('transaction-modal')"></div>
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>Add Transaction</h3>
+                <button class="btn-icon" onclick="closeModal('transaction-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="transaction-form" class="modal-form">
+                <div class="form-group">
+                    <label>Type</label>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-btn active" data-type="expense" onclick="setTransactionType('expense')">Expense</button>
+                        <button type="button" class="toggle-btn" data-type="income" onclick="setTransactionType('income')">Income</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <div class="input-icon">
+                        <span>₱</span>
+                        <input type="number" step="0.01" required id="transaction-amount" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" required id="transaction-desc" placeholder="What was this for?">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="transaction-category" required>
+                        <option value="food">Food & Dining</option>
+                        <option value="transport">Transport</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="bills">Bills & Utilities</option>
+                        <option value="health">Health</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" required id="transaction-date">
+                </div>
+                <button type="submit" class="btn-primary btn-full">Add Transaction</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="goal-modal">
+        <div class="modal-backdrop" onclick="closeModal('goal-modal')"></div>
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>Create Savings Goal</h3>
+                <button class="btn-icon" onclick="closeModal('goal-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="goal-form" class="modal-form">
+                <div class="form-group">
+                    <label>Goal Name</label>
+                    <input type="text" required id="goal-name" placeholder="e.g., New Car">
+                </div>
+                <div class="form-group">
+                    <label>Target Amount</label>
+                    <div class="input-icon">
+                        <span>₱</span>
+                        <input type="number" step="0.01" required id="goal-target" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Current Amount</label>
+                    <div class="input-icon">
+                        <span>₱</span>
+                        <input type="number" step="0.01" id="goal-current" placeholder="0.00" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Target Date</label>
+                    <input type="date" id="goal-date">
+                </div>
+                <div class="form-group">
+                    <label>Color Theme</label>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background: #6366f1" data-color="#6366f1"></div>
+                        <div class="color-option" style="background: #ec4899" data-color="#ec4899"></div>
+                        <div class="color-option" style="background: #10b981" data-color="#10b981"></div>
+                        <div class="color-option" style="background: #f59e0b" data-color="#f59e0b"></div>
+                        <div class="color-option" style="background: #ef4444" data-color="#ef4444"></div>
+                        <div class="color-option" style="background: #8b5cf6" data-color="#8b5cf6"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-full">Create Goal</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="add-funds-modal">
+        <div class="modal-backdrop" onclick="closeModal('add-funds-modal')"></div>
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>Add Funds</h3>
+                <button class="btn-icon" onclick="closeModal('add-funds-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="add-funds-form" class="modal-form">
+                <input type="hidden" id="add-funds-goal-id">
+                <div class="form-group">
+                    <label>Amount to Add</label>
+                    <div class="input-icon">
+                        <span>₱</span>
+                        <input type="number" step="0.01" min="0.01" required id="add-funds-amount" placeholder="0.00">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-full">Add Funds</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
