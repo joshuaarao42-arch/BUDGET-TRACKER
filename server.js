@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const { readData, writeData } = require('./db');
 const { hashPassword, checkPassword, signToken, requireAuth } = require('./auth');
 
@@ -9,6 +10,24 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,                   // 10 attempts per IP per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many attempts. Please try again in a few minutes.' }
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300,                  // 300 requests per IP per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' }
+});
+app.use('/api', apiLimiter);
+
 app.use(express.static(__dirname));
 
 function nextId(items) {
@@ -35,7 +54,7 @@ function validateGoal(body) {
   return null;
 }
 
-app.post('/api/auth/register', (req, res) => {
+app.post('/api/auth/register', authLimiter, (req, res) => {
   const { username, password } = req.body;
 
   if (!username || typeof username !== 'string' || username.trim().length < 3) {
@@ -64,7 +83,7 @@ app.post('/api/auth/register', (req, res) => {
   res.status(201).json({ token, user: { id: user.id, username: user.username } });
 });
 
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', authLimiter, (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
